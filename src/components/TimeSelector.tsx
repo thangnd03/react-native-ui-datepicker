@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Modal, Pressable } from 'react-native';
 import { useCalendarContext } from '../CalendarContext';
 import Wheel from './TimePicker/Wheel';
-import { CALENDAR_HEIGHT } from '../enums';
+import { CALENDAR_HEIGHT, CalendarViews } from '../enums';
 import { getParsedDate, getDate, getFormated } from '../utils';
 
 function createNumberList(num: number) {
@@ -17,7 +17,7 @@ const hours = createNumberList(24);
 const minutes = createNumberList(60);
 
 const TimeSelector = () => {
-  const { date, onSelectDate, theme } = useCalendarContext();
+  const { date, onSelectDate, theme , showModalTime,setShowModalTime, confirmText } = useCalendarContext();
   const { hour, minute } = getParsedDate(date);
 
   const handleChangeHour = useCallback(
@@ -36,13 +36,24 @@ const TimeSelector = () => {
     [date, onSelectDate]
   );
 
+  const onChangeView = useCallback(() => { 
+    setShowModalTime(false);
+  },[]);
+
   return (
-    <View style={styles.container} testID="time-selector">
+    <Modal testID="time-selector" transparent
+    visible={!!showModalTime}
+    onRequestClose={onChangeView}
+    >
+      <View
+      style={styles.container}
+      >
       <View style={styles.timePickerContainer}>
-        <View style={styles.wheelContainer}>
+        <View style={styles.timePicker}>
+          <View style={styles.wheelContainer}>
           <Wheel value={hour} items={hours} setValue={handleChangeHour} />
-        </View>
-        <Text
+          </View>
+          <Text
           style={{
             marginHorizontal: 5,
             ...styles.timePickerText,
@@ -50,12 +61,28 @@ const TimeSelector = () => {
           }}
         >
           :
-        </Text>
-        <View style={styles.wheelContainer}>
+          </Text>
+          <View style={styles.wheelContainer}>
           <Wheel value={minute} items={minutes} setValue={handleChangeMinute} />
+          </View>
+
         </View>
+        <Pressable onPress={onChangeView}>
+          <Text
+            style={{
+              color: theme?.selectedItemColor,
+              fontSize: 20,
+              fontWeight: 'bold',
+            }}
+          >
+            {confirmText}
+          </Text>
+        </Pressable>
+    
       </View>
-    </View>
+
+      </View>
+    </Modal>
   );
 };
 
@@ -64,21 +91,28 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   wheelContainer: {
     flex: 1,
   },
   timePickerContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: CALENDAR_HEIGHT / 2,
-    height: CALENDAR_HEIGHT / 2,
+    marginHorizontal: 40,
+    backgroundColor:"white",
+    borderRadius: 10,
+    padding: 20,
   },
   timePickerText: {
     fontSize: 24,
     fontWeight: 'bold',
   },
+  timePicker:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 
 export default TimeSelector;

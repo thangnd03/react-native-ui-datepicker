@@ -17,6 +17,7 @@ export type LocalState = {
   calendarView: CalendarViews;
   currentDate: DateType; // used for latest state of calendar based on Month and Year
   currentYear: number;
+  showModalTime?: boolean;
 };
 
 export type CalendarAction = {
@@ -97,4 +98,7 @@ export interface DatePickerBaseProps {
   onChange?: SingleChange | RangeChange | MultiChange;
   initialView?: CalendarViews;
   height?: number;
+  setShowModalTime:(value:boolean) => void;
+  showModalTime: boolean;
+  confirmText:string
 }

@@ -81,6 +81,7 @@ const DateTimePicker = (
     onChange,
     initialView = 'day',
     height,
+    confirmText = "",
     ...rest
   } = props;
 
@@ -116,6 +117,7 @@ const DateTimePicker = (
 
   const [state, dispatch] = useReducer(
     (prevState: LocalState, action: CalendarAction) => {
+      
       switch (action.type) {
         case CalendarActionKind.SET_CALENDAR_VIEW:
           return {
@@ -151,6 +153,11 @@ const DateTimePicker = (
           return {
             ...prevState,
             dates,
+          };
+        case CalendarActionKind.SET_VISIBLE_CHOOSE_TIME:
+          return {
+           ...prevState,
+           showModalTime: action.payload,
           };
       }
     },
@@ -289,6 +296,13 @@ const DateTimePicker = (
     });
   }, []);
 
+  const setShowModalTime = useCallback((visible:boolean) => {
+    dispatch({
+      type: CalendarActionKind.SET_VISIBLE_CHOOSE_TIME,
+      payload: visible,
+    });
+  },[])
+
   return (
     <CalendarContext.Provider
       value={{
@@ -309,6 +323,9 @@ const DateTimePicker = (
         onSelectYear,
         onChangeMonth,
         onChangeYear,
+        setShowModalTime,
+        showModalTime:state.showModalTime,
+        confirmText
       }}
     >
       <Calendar

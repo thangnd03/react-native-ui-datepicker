@@ -21,6 +21,7 @@ const Header = ({ buttonPrevIcon, buttonNextIcon }: HeaderProps) => {
     theme,
     locale,
     timePicker,
+    setShowModalTime
   } = useCalendarContext();
 
   const currentMonthText = dayjs(currentDate).locale(locale).format('MMMM');
@@ -144,9 +145,7 @@ const Header = ({ buttonPrevIcon, buttonNextIcon }: HeaderProps) => {
       </View>
       {timePicker && mode === 'single' && calendarView !== 'year' ? (
         <Pressable
-          onPress={() =>
-            setCalendarView(calendarView === 'time' ? 'day' : 'time')
-          }
+          onPress={() =>{setShowModalTime(true)}}
           accessibilityRole="button"
           accessibilityLabel={dayjs(date).format('HH:mm')}
         >

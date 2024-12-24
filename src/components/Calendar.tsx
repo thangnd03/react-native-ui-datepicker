@@ -43,7 +43,10 @@ const Calendar = ({ buttonPrevIcon, buttonNextIcon, height }: PropTypes) => {
         />
       ) : null} */}
       <Header buttonPrevIcon={buttonPrevIcon} buttonNextIcon={buttonNextIcon} />
-      <View style={styles.calendarContainer}>{CalendarView[calendarView]}</View>
+      <View style={styles.calendarContainer}>{CalendarView[calendarView]}
+
+        <TimeSelector />
+      </View>
     </View>
   );
 };
